@@ -43,7 +43,7 @@ The model used in this project is a pre-trained TensorFlow model (`flower_classi
 
 The model file (`flower_classification_model.h5`) is loaded at the start of the application.
 
-### 1. Root Endpoint
+### Root Endpoint
 
 This is the default endpoint for the application. It returns a simple welcome message.
 
