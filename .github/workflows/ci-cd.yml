@@ -1,0 +1,38 @@
+name: CI/CD for Flower Classification App
+
+on:
+  push:
+    branches:
+      - main  # Triggers on push to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repo
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: SSH into EC2 and deploy
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{secrets.EC2_SSH_KEY}} ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << 'EOF'
+            cd /path/to/your/app # Go to your app's directory
+            git pull origin main  # Pull the latest code
+            source /path/to/your/virtualenv/bin/activate  # Activate virtualenv if using
+            pip install -r requirements.txt  # Install any new dependencies
+            sudo systemctl restart my-fastapi-app  # Restart your FastAPI app
+          EOF
